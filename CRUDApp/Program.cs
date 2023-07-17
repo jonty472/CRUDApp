@@ -8,17 +8,43 @@ namespace CRUDApp
         static void Main(string[] args)
         {
             TestDatabaseConnection();
+            CreateTask();
         }
-
+        
 
 
         static void TestDatabaseConnection()
         {
-            string connectionString = "";
-
-            using SqlConnection connection = new SqlConnection(connectionString);
+            string connectionString = "Server=DESKTOP-7O5A39Q\\SQLEXPRESS ;Integrated Security=true; Database=TaskDatabase;";
             
-            connection.Open();
+            string commandText = 
+                "INSERT INTO Tasks (ID, Task)" +
+                "VALUES (@ID, @Task)";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(commandText, conn);
+                command.Parameters.Add("@ID", System.Data.SqlDbType.Int).Value = 1;
+                command.Parameters.Add("@Task", System.Data.SqlDbType.Char).Value = "Washing";
+
+                try
+                {
+                    conn.Open();
+                    command.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            
+        }
+
+        static void CreateTask()
+        {
+            string commandText = "INSERT INTO Tasks (ID, Task)" +
+                   "VALUES (1, Washing)";
+
 
         }
     }
